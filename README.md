@@ -1,5 +1,10 @@
 # python-discord-coingecko
 
+# Pour run le bot, dans votre terminal saissisez
+```
+npx nodemon --exec "clear;python3" bot.py
+```
+
 ##### Dans un premier temps créer un environnement 
 ```
 python3.8 -m venv .env
