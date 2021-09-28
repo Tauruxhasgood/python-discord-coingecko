@@ -54,27 +54,25 @@ def price_history(
         coin = command[2]
         # on déclare la devise voulu, ici en USD qui se trouve en place 3
         currency = command[3]
+
         # on déclare la date qui se trouve en place 4
         date = [int(x) for x in command[4].split("/")]
-        print(date)
 
+        # on inverse la date ce qui permet de pouvoir la saisir au format français (jj/mm/aaaa)
+        date.reverse()
 
-        # date_time = datetime.now()
-        # str_time = datetime.strftime(date_time, '%d-%m-%Y')
-        # print('info str_time', str_time)
-        date_time = datetime
-        print('info de date_time', date_time)
-        
+        # timestamp est égale à datetime qui lui même reprends la date déclaré par l'utilisateur
         timestamp = datetime(date[0], date[1], date[2])
-        print('info4', timestamp)
+        print(timestamp)
+        # on demande la date du jour stocker sous la variable present
         present = datetime.now()
-        print('info5', present)
 
+        # on vérifie que si timestamp (date saisie par l'utilisateur) est supérieur à la date du jour, on prends la date du jour
         if timestamp > present:
             timestamp = present
-        # Set the minimum date if older than the minimum date
-        elif timestamp < datetime(2017, 3, 20):
-            timestamp = datetime(2017, 3, 20)
+        # Définir la date minimale si elle est antérieure à la date minimale
+        elif timestamp < datetime(2009, 1, 13):
+            timestamp = datetime(2009, 1, 13)
         return coin, currency, timestamp, error_message
     except IndexError:
         error_message = "**ERROR** Invalid number of parameters."
@@ -83,7 +81,7 @@ def price_history(
         error_message = "**ERROR** Invalid parameters."
         return coin, currency, timestamp, error_message
 
-
+# cette partie du code donnera le cours de la crypto choisit
 def current_price(command, coin=None, currency=None, error_message=None):
     try:
         coin = command[1]
@@ -97,6 +95,7 @@ def current_price(command, coin=None, currency=None, error_message=None):
 
 @client.event
 async def on_ready():
+    # information pour savoir si le bot est correctement connecté
     print(f"connected as {client.user}")
     await client.change_presence(activity=discord.Game(name="!cb"))
 
@@ -113,7 +112,7 @@ async def on_message(message):
             await message.channel.send(embed=embed)
         else:
             command = message.content.split(" ")
-            # -> prix historique crypto
+            # fonction prix historique crypto
             if command[1] == "history":
                 coin, currency, timestamp, error_message = price_history(command)
                 if error_message:
@@ -124,14 +123,8 @@ async def on_message(message):
                     )
                 except KeyError:
                     await message.channel.send("**ERROR** Invalid parameters.")
-            if command[1] == "coins":
-                # r = requests.get(f"https://api.coingecko.com/api/v3/simple/price?ids={arg}&vs_currencies=usd")
-                # result = r.json()
-                # data = result
-                # print(coin)
-                
-                # for i in range(len(data)): e = data[i]["name"]
-                # print(e)
+            # fonction cours de la crypto choisit
+            elif command[1] == "coins":
                 embed = discord.Embed(
                     title=":coin: Coin List",
                     url="https://www.coingecko.com/fr",
